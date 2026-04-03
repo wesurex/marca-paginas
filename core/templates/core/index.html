@@ -30,7 +30,10 @@
                 <h6 class="mb-1">
                   <a href="{% url 'obra_detalhe' obra.pk %}" class="text-decoration-none text-white">{{ obra.titulo }}</a>
                 </h6>
-                <span class="badge badge-{{ obra.tipo }} status-badge mb-1">{{ obra.get_tipo_display }}</span>
+                <div class="d-flex gap-1 flex-wrap mb-1">
+                  <span class="badge badge-tipo">{{ obra.get_tipo_display }}</span>
+                  <span class="badge badge-status lendo">Lendo</span>
+                </div>
                 {% if obra.autor %}<p class="text-muted small mb-0">{{ obra.autor }}</p>{% endif %}
               </div>
             </div>
@@ -98,7 +101,10 @@
                 <h6 class="mb-1">
                   <a href="{% url 'obra_detalhe' obra.pk %}" class="text-decoration-none text-white">{{ obra.titulo }}</a>
                 </h6>
-                <span class="badge badge-{{ obra.tipo }} status-badge mb-1">{{ obra.get_tipo_display }}</span>
+                <div class="d-flex gap-1 flex-wrap mb-1">
+                  <span class="badge badge-tipo">{{ obra.get_tipo_display }}</span>
+                  <span class="badge badge-status pausado">Pausado</span>
+                </div>
                 <p class="text-muted small mb-0">Cap. {{ obra.progresso.capitulo_atual }}</p>
               </div>
             </div>

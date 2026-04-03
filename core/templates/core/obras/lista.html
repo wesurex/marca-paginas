@@ -51,13 +51,9 @@
           {% endif %}
           <div class="card-body d-flex flex-column">
             <div class="d-flex justify-content-between align-items-start mb-1">
-              <span class="badge badge-{{ obra.tipo }}">{{ obra.get_tipo_display }}</span>
+              <span class="badge badge-tipo">{{ obra.get_tipo_display }}</span>
               {% if obra.progresso %}
-                <span class="badge bg-secondary text-white small">
-                  {% if obra.progresso.status_leitura == 'lendo' %}<i class="bi bi-play-fill"></i>
-                  {% elif obra.progresso.status_leitura == 'pausado' %}<i class="bi bi-pause-fill"></i>
-                  {% elif obra.progresso.status_leitura == 'completo' %}<i class="bi bi-check-lg"></i>
-                  {% else %}<i class="bi bi-x-lg"></i>{% endif %}
+                <span class="badge badge-status {{ obra.progresso.status_leitura }}">
                   {{ obra.progresso.get_status_leitura_display }}
                 </span>
               {% endif %}

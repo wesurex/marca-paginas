@@ -7,81 +7,177 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    body { background-color: #0f0f0f; color: #f0f0f0; min-height: 100vh; font-size: 15px; }
-    h1, h2, h3, h4, h5, h6 { color: #ffffff; }
-    p, span, li, td, th, label, .form-label { color: #e8e8e8; }
-    .navbar { background-color: #1a1a2e !important; border-bottom: 1px solid #2d2d4e; }
-    .navbar-brand { color: #7c5cbf !important; font-weight: 700; font-size: 1.3rem; }
-    .nav-link { color: #d0c0f0 !important; }
-    .nav-link:hover { color: #fff !important; }
-    .card { background-color: #1a1a2e; border: 1px solid #2d2d4e; border-radius: 12px; }
-    .card-header { background-color: #12122a; border-bottom: 1px solid #2d2d4e; }
-    .card-body, .card-text { color: #f0f0f0; }
-    .badge-livro { background-color: #2d6a4f; color: #fff; }
-    .badge-manga { background-color: #7b3f9e; color: #fff; }
-    .badge-manhwa { background-color: #b5451b; color: #fff; }
-    .badge-manhua { background-color: #1a6b8a; color: #fff; }
-    .btn-primary { background-color: #7c5cbf; border-color: #7c5cbf; color: #fff; }
-    .btn-primary:hover { background-color: #6a4aad; border-color: #6a4aad; color: #fff; }
-    .btn-outline-primary { color: #a882e8; border-color: #7c5cbf; }
-    .btn-outline-primary:hover { background-color: #7c5cbf; color: #fff; }
-    .btn-outline-secondary { color: #c0c0c0; border-color: #555; }
-    .btn-outline-secondary:hover { background-color: #333; color: #fff; border-color: #888; }
-    .form-control, .form-select { background-color: #12122a; border-color: #3d3d5e; color: #f0f0f0; }
-    .form-control:focus, .form-select:focus { background-color: #12122a; border-color: #7c5cbf; color: #f0f0f0; box-shadow: 0 0 0 0.2rem rgba(124,92,191,0.25); }
-    .form-control::placeholder { color: #888; }
-    .form-select option { background-color: #1a1a2e; color: #f0f0f0; }
-    .form-text { color: #aaa !important; }
-    .capa-obra { width: 100%; max-width: 180px; border-radius: 8px; object-fit: cover; aspect-ratio: 2/3; background: #12122a; }
-    .capa-placeholder { width: 180px; height: 270px; background: #12122a; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #555; font-size: 3rem; }
-    .status-badge { font-size: 0.75rem; }
-    .historico-item { border-left: 3px solid #7c5cbf; padding-left: 12px; margin-bottom: 10px; }
-    .progress-bar { background-color: #7c5cbf; }
-    .progress { background-color: #12122a; }
-    a { color: #b89cf0; }
-    a:hover { color: #d4beff; }
-    .text-muted { color: #aaa !important; }
-    .text-white { color: #fff !important; }
-    small { color: #bbb; }
-    .table { color: #f0f0f0; }
-    .table-hover tbody tr:hover { background-color: #12122a; color: #f0f0f0; }
-    hr { border-color: #2d2d4e; }
-    .alert-success { background-color: #1a3a2e; border-color: #2d6a4f; color: #c5f0d0; }
-    .alert-danger { background-color: #3a1a1a; border-color: #6a2d2d; color: #f0c5c5; }
+    :root {
+      --bg:       #0c0c0e;
+      --surface:  #141418;
+      --surface2: #1c1c22;
+      --border:   #2a2a35;
+      --purple:   #8b6fd4;
+      --purple-2: #6a50b8;
+      --text:     #f0eeff;
+      --muted:    #888899;
+    }
+
+    * { box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-size: 15px; min-height: 100vh; }
+    h1,h2,h3,h4,h5,h6 { color: #fff; }
+    p, span, li, td, th, label, .form-label { color: var(--text); }
+    a { color: #b09ee0; text-decoration: none; }
+    a:hover { color: #d4c8ff; }
+    small, .text-muted { color: var(--muted) !important; }
+    hr { border-color: var(--border); }
+
+    /* Navbar */
+    .navbar {
+      background: var(--surface) !important;
+      border-bottom: 1px solid var(--border);
+      padding: 0 0;
+      height: 56px;
+    }
+    .navbar .container { height: 100%; }
+    .navbar-brand {
+      color: var(--purple) !important;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.3px;
+    }
+    .nav-link { color: var(--muted) !important; font-size: 0.88rem; padding: 6px 12px !important; border-radius: 6px; }
+    .nav-link:hover { color: var(--text) !important; background: var(--surface2); }
+
+    /* Pills de status na navbar */
+    .nav-status-group { display: flex; align-items: center; gap: 2px; }
+    .nav-status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 11px; border-radius: 6px;
+      font-size: 0.82rem; color: var(--muted) !important;
+      text-decoration: none; transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .nav-status-pill:hover { background: var(--surface2); color: var(--text) !important; }
+    .nav-status-pill .pill-count {
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: 20px;
+      min-width: 22px;
+      text-align: center;
+    }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
+
+    /* Cards */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+    .card-header { background: var(--surface2); border-bottom: 1px solid var(--border); }
+    .card-body, .card-text { color: var(--text); }
+
+    /* Badges */
+    .badge-tipo {
+      background: rgba(139,111,212,0.15);
+      color: #c4b0f0;
+      border: 1px solid rgba(139,111,212,0.3);
+      font-weight: 500;
+      font-size: 0.72rem;
+    }
+    .badge-status {
+      background: rgba(255,255,255,0.06);
+      color: #bbb;
+      border: 1px solid rgba(255,255,255,0.1);
+      font-weight: 500;
+      font-size: 0.72rem;
+    }
+    .badge-status.lendo   { background: rgba(139,111,212,0.2); color: #c4b0f0; border-color: rgba(139,111,212,0.35); }
+    .badge-status.pausado { background: rgba(255,255,255,0.07); color: #aaa; }
+
+    /* Botões */
+    .btn-primary { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .btn-primary:hover { background: var(--purple-2); border-color: var(--purple-2); color: #fff; }
+    .btn-outline-primary { color: var(--purple); border-color: var(--purple); }
+    .btn-outline-primary:hover { background: var(--purple); color: #fff; }
+    .btn-outline-secondary { color: var(--muted); border-color: var(--border); }
+    .btn-outline-secondary:hover { background: var(--surface2); color: var(--text); border-color: #555; }
+    .btn-outline-danger { color: #c0706a; border-color: #6a3030; }
+    .btn-outline-danger:hover { background: #3a1a1a; color: #f0a0a0; border-color: #8a4040; }
+
+    /* Formulários */
+    .form-control, .form-select {
+      background: var(--surface2); border-color: var(--border);
+      color: var(--text);
+    }
+    .form-control:focus, .form-select:focus {
+      background: var(--surface2); border-color: var(--purple);
+      color: var(--text); box-shadow: 0 0 0 3px rgba(139,111,212,0.2);
+    }
+    .form-control::placeholder { color: #55556a; }
+    .form-select option { background: var(--surface2); color: var(--text); }
+    .form-text { color: var(--muted) !important; }
+
+    /* Misc */
+    .capa-obra { width: 100%; max-width: 180px; border-radius: 8px; object-fit: cover; aspect-ratio: 2/3; }
+    .capa-placeholder { width: 180px; height: 270px; background: var(--surface2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #333; font-size: 3rem; }
+    .historico-item { border-left: 2px solid var(--border); padding-left: 12px; margin-bottom: 10px; }
+    .historico-item:hover { border-left-color: var(--purple); }
+    .progress { background: var(--surface2); }
+    .progress-bar { background: var(--purple); }
+    .table { color: var(--text); }
+    .table-hover tbody tr:hover { background: var(--surface2); color: var(--text); }
+    .alert-success { background: #0e2018; border-color: #1a4028; color: #a0dbb0; }
+    .alert-danger  { background: #1e0e0e; border-color: #3a1818; color: #dba0a0; }
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg mb-4">
-  <div class="container">
-    <a class="navbar-brand" href="{% url 'index' %}">
-      <i class="bi bi-bookmark-heart-fill me-2"></i>Histórias Guardadas
+<nav class="navbar navbar-expand-lg">
+  <div class="container d-flex align-items-center">
+
+    <a class="navbar-brand me-4" href="{% url 'index' %}">
+      Histórias Guardadas
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+
+    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav me-auto align-items-center">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'index' %}"><i class="bi bi-house me-1"></i>Início</a>
+          <a class="nav-link" href="{% url 'index' %}">Início</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'obra_lista' %}"><i class="bi bi-collection me-1"></i>Biblioteca</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'obra_criar' %}"><i class="bi bi-plus-circle me-1"></i>Cadastrar</a>
+          <a class="nav-link" href="{% url 'obra_lista' %}">Biblioteca</a>
         </li>
       </ul>
+
+      <div class="nav-status-group me-3">
+        <a href="{% url 'obra_lista' %}?status=lendo" class="nav-status-pill">
+          Lendo <span class="pill-count">{{ nav_contadores.lendo }}</span>
+        </a>
+        <div class="nav-divider"></div>
+        <a href="{% url 'obra_lista' %}?status=pausado" class="nav-status-pill">
+          Pausado <span class="pill-count">{{ nav_contadores.pausado }}</span>
+        </a>
+        <div class="nav-divider"></div>
+        <a href="{% url 'obra_lista' %}?status=completo" class="nav-status-pill">
+          Completo <span class="pill-count">{{ nav_contadores.completo }}</span>
+        </a>
+        <div class="nav-divider"></div>
+        <a href="{% url 'obra_lista' %}?status=abandonado" class="nav-status-pill">
+          Abandonado <span class="pill-count">{{ nav_contadores.abandonado }}</span>
+        </a>
+      </div>
+
+      <a href="{% url 'obra_criar' %}" class="btn btn-primary btn-sm px-3">+ Cadastrar</a>
     </div>
+
   </div>
 </nav>
 
-<div class="container pb-5">
+<div class="container py-4 pb-5">
   {% if messages %}
     {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
         {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
       </div>
     {% endfor %}
   {% endif %}
