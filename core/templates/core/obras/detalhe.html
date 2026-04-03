@@ -1,0 +1,143 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ obra.titulo }} — Marca Páginas{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'obra_lista' %}" class="text-muted small text-decoration-none">
+    <i class="bi bi-arrow-left me-1"></i>Biblioteca
+  </a>
+</div>
+
+<div class="row g-4">
+  <!-- Capa e ações -->
+  <div class="col-md-3 text-center">
+    {% if obra.capa %}
+      <img src="{{ obra.capa.url }}" alt="{{ obra.titulo }}" class="capa-obra mb-3" style="max-width:180px;width:100%;">
+    {% elif obra.capa_url %}
+      <img src="{{ obra.capa_url }}" alt="{{ obra.titulo }}" class="capa-obra mb-3" style="max-width:180px;width:100%;">
+    {% else %}
+      <div class="capa-placeholder mx-auto mb-3">
+        <i class="bi bi-book"></i>
+      </div>
+    {% endif %}
+    <div class="d-grid gap-2">
+      <a href="{% url 'obra_editar' obra.pk %}" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-pencil me-1"></i>Editar obra
+      </a>
+      <a href="{% url 'obra_deletar' obra.pk %}" class="btn btn-outline-danger btn-sm">
+        <i class="bi bi-trash me-1"></i>Remover
+      </a>
+    </div>
+  </div>
+
+  <!-- Detalhes -->
+  <div class="col-md-9">
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+      <span class="badge badge-{{ obra.tipo }} fs-6">{{ obra.get_tipo_display }}</span>
+      <span class="badge bg-secondary">{{ obra.get_status_obra_display }}</span>
+      {% for genero in obra.generos.all %}
+        <span class="badge" style="background-color:#1a3a5e;">{{ genero.nome }}</span>
+      {% endfor %}
+    </div>
+
+    <h2 class="mb-1">{{ obra.titulo }}</h2>
+    {% if obra.autor %}<p class="text-muted mb-3">{{ obra.autor }}</p>{% endif %}
+
+    {% if obra.site_base_url %}
+      <p class="mb-3">
+        <a href="{{ obra.site_base_url }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-globe me-1"></i>Ir ao site
+        </a>
+      </p>
+    {% endif %}
+
+    <!-- Progresso -->
+    {% if obra.progresso %}
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-bookmark-fill me-2"></i>Progresso de leitura</span>
+        <a href="{% url 'progresso_atualizar' obra.pk %}" class="btn btn-sm btn-primary">
+          <i class="bi bi-pencil me-1"></i>Atualizar
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-sm-4 text-center">
+            <div class="fs-3 fw-bold text-purple">{{ obra.progresso.capitulo_atual }}</div>
+            <div class="text-muted small">Capítulo atual</div>
+          </div>
+          <div class="col-sm-4 text-center">
+            <div class="fs-3 fw-bold">{{ obra.progresso.pagina_atual }}</div>
+            <div class="text-muted small">Página atual</div>
+          </div>
+          <div class="col-sm-4 text-center">
+            <span class="badge fs-6
+              {% if obra.progresso.status_leitura == 'lendo' %}bg-success
+              {% elif obra.progresso.status_leitura == 'pausado' %}bg-warning text-dark
+              {% elif obra.progresso.status_leitura == 'completo' %}bg-info text-dark
+              {% else %}bg-danger{% endif %}">
+              {{ obra.progresso.get_status_leitura_display }}
+            </span>
+            <div class="text-muted small mt-1">Status</div>
+          </div>
+        </div>
+
+        {% if obra.total_capitulos %}
+          <div class="mt-3">
+            <div class="d-flex justify-content-between small text-muted mb-1">
+              <span>Progresso geral</span>
+              <span>{{ obra.progresso.capitulo_atual }}/{{ obra.total_capitulos }} caps</span>
+            </div>
+            <div class="progress" style="height:8px;">
+              <div class="progress-bar" style="width:{% widthratio obra.progresso.capitulo_atual obra.total_capitulos 100 %}%;"></div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if obra.progresso.url_atual %}
+          <div class="mt-3">
+            <a href="{{ obra.progresso.url_atual }}" target="_blank" class="btn btn-primary">
+              <i class="bi bi-play-fill me-1"></i>Continuar de onde parei
+            </a>
+          </div>
+        {% endif %}
+
+        {% if obra.progresso.notas %}
+          <div class="mt-3">
+            <p class="text-muted small mb-1"><i class="bi bi-sticky me-1"></i>Notas</p>
+            <p class="mb-0" style="white-space:pre-wrap;">{{ obra.progresso.notas }}</p>
+          </div>
+        {% endif %}
+
+        <p class="text-muted small mt-3 mb-0">
+          <i class="bi bi-clock me-1"></i>Último acesso: {{ obra.progresso.ultimo_acesso|date:"d/m/Y H:i" }}
+        </p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Histórico -->
+{% if historico %}
+<hr>
+<h5 class="mb-3"><i class="bi bi-clock-history me-2"></i>Histórico recente</h5>
+<div class="row g-2">
+  {% for item in historico %}
+    <div class="col-md-6">
+      <div class="historico-item">
+        <span class="small fw-semibold">Cap. {{ item.capitulo }}</span>
+        <span class="text-muted small"> — Pág. {{ item.pagina }}</span>
+        <div class="text-muted small">{{ item.lido_em|date:"d/m/Y H:i" }}</div>
+        {% if item.url_acessada %}
+          <a href="{{ item.url_acessada }}" target="_blank" class="small">
+            <i class="bi bi-link-45deg"></i>Voltar para este capítulo
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

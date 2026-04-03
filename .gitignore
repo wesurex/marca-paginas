@@ -1,0 +1,28 @@
+# Ambiente virtual
+venv/
+env/
+.env
+
+# Banco de dados
+db.sqlite3
+
+# Uploads de mídia
+media/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Django
+*.log
+local_settings.py
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Sistema
+.DS_Store
+Thumbs.db

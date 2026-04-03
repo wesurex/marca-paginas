@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Biblioteca — Marca Páginas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0"><i class="bi bi-collection me-2"></i>Biblioteca</h2>
+  <a href="{% url 'obra_criar' %}" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-1"></i>Cadastrar obra
+  </a>
+</div>
+
+<form method="get" class="row g-2 mb-4">
+  <div class="col-auto">
+    <select name="tipo" class="form-select form-select-sm" style="background-color:#12122a;border-color:#2d2d4e;color:#e0e0e0;">
+      <option value="">Todos os tipos</option>
+      {% for val, label in tipo_choices %}
+        <option value="{{ val }}" {% if tipo_filtro == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select form-select-sm" style="background-color:#12122a;border-color:#2d2d4e;color:#e0e0e0;">
+      <option value="">Todos os status</option>
+      {% for val, label in status_choices %}
+        <option value="{{ val }}" {% if status_filtro == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-sm btn-outline-primary">Filtrar</button>
+    {% if tipo_filtro or status_filtro %}
+      <a href="{% url 'obra_lista' %}" class="btn btn-sm btn-outline-secondary ms-1">Limpar</a>
+    {% endif %}
+  </div>
+</form>
+
+{% if obras %}
+  <div class="row g-3">
+    {% for obra in obras %}
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100">
+          {% if obra.capa %}
+            <img src="{{ obra.capa.url }}" class="card-img-top" alt="{{ obra.titulo }}" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
+          {% elif obra.capa_url %}
+            <img src="{{ obra.capa_url }}" class="card-img-top" alt="{{ obra.titulo }}" style="height:200px;object-fit:cover;border-radius:12px 12px 0 0;">
+          {% else %}
+            <div style="height:200px;background:#12122a;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;color:#555;font-size:4rem;">
+              <i class="bi bi-book"></i>
+            </div>
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <span class="badge badge-{{ obra.tipo }}">{{ obra.get_tipo_display }}</span>
+              {% if obra.progresso %}
+                <span class="badge bg-secondary text-white small">
+                  {% if obra.progresso.status_leitura == 'lendo' %}<i class="bi bi-play-fill"></i>
+                  {% elif obra.progresso.status_leitura == 'pausado' %}<i class="bi bi-pause-fill"></i>
+                  {% elif obra.progresso.status_leitura == 'completo' %}<i class="bi bi-check-lg"></i>
+                  {% else %}<i class="bi bi-x-lg"></i>{% endif %}
+                  {{ obra.progresso.get_status_leitura_display }}
+                </span>
+              {% endif %}
+            </div>
+            <h6 class="card-title mt-2 mb-1">
+              <a href="{% url 'obra_detalhe' obra.pk %}" class="text-decoration-none text-white">{{ obra.titulo }}</a>
+            </h6>
+            {% if obra.autor %}<p class="text-muted small mb-2">{{ obra.autor }}</p>{% endif %}
+            {% if obra.progresso %}
+              <p class="small mb-0 mt-auto text-muted">
+                <i class="bi bi-bookmark me-1"></i>Cap. {{ obra.progresso.capitulo_atual }}
+                {% if obra.total_capitulos %} / {{ obra.total_capitulos }}{% endif %}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card">
+    <div class="card-body text-center py-5">
+      <i class="bi bi-search text-muted" style="font-size:3rem;"></i>
+      <p class="text-muted mt-3 mb-0">Nenhuma obra encontrada.</p>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

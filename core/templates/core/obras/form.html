@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ titulo_pagina }} — Marca Páginas{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'obra_lista' %}" class="text-muted small text-decoration-none">
+    <i class="bi bi-arrow-left me-1"></i>Biblioteca
+  </a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-book me-2"></i>{{ titulo_pagina }}</h5>
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Título *</label>
+            {{ form.titulo }}
+            {% if form.titulo.errors %}<div class="text-danger small mt-1">{{ form.titulo.errors }}</div>{% endif %}
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label">Tipo *</label>
+              {{ form.tipo }}
+              {% if form.tipo.errors %}<div class="text-danger small mt-1">{{ form.tipo.errors }}</div>{% endif %}
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Status da obra</label>
+              {{ form.status_obra }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Autor</label>
+            {{ form.autor }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Imagem da capa</label>
+            {% if obra.capa %}
+              <div class="mb-2">
+                <img src="{{ obra.capa.url }}" alt="Capa atual" style="height:80px;border-radius:6px;object-fit:cover;">
+                <span class="text-muted small ms-2">Capa atual</span>
+              </div>
+            {% endif %}
+            {{ form.capa }}
+            <div class="form-text">Faça upload de uma imagem (JPG, PNG, WEBP).</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">URL da capa <span class="text-muted small">(opcional)</span></label>
+            {{ form.capa_url }}
+            <div class="form-text">Use se preferir um link externo em vez de upload.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">URL do site de leitura</label>
+            {{ form.site_base_url }}
+            <div class="form-text text-muted">URL base onde você lê esta obra.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Total de capítulos</label>
+            {{ form.total_capitulos }}
+            <div class="form-text text-muted">Deixe vazio se ainda não souber.</div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Gêneros</label>
+            <div style="max-height:150px;overflow-y:auto;border:1px solid #2d2d4e;border-radius:8px;padding:10px;background:#12122a;">
+              {{ form.generos }}
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg me-1"></i>Salvar
+            </button>
+            {% if obra %}
+              <a href="{% url 'obra_detalhe' obra.pk %}" class="btn btn-outline-secondary">Cancelar</a>
+            {% else %}
+              <a href="{% url 'obra_lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
