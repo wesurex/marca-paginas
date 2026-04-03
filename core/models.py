@@ -35,6 +35,10 @@ class Obra(models.Model):
     site_base_url = models.URLField(blank=True, verbose_name='URL do site')
     total_capitulos = models.PositiveIntegerField(null=True, blank=True, verbose_name='Total de capítulos')
     status_obra = models.CharField(max_length=20, choices=STATUS_OBRA_CHOICES, default='em_andamento', verbose_name='Status da obra')
+    descricao = models.TextField(blank=True, verbose_name='Descrição')
+    notas = models.TextField(blank=True, verbose_name='Notas pessoais')
+    classificacao = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Classificação',
+        choices=[(i, f'{i}/10') for i in range(1, 11)])
     generos = models.ManyToManyField(Genero, blank=True, verbose_name='Gêneros')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
