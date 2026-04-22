@@ -3,6 +3,154 @@
 {% block title %}Início — Histórias Guardadas{% endblock %}
 
 {% block content %}
+
+<!-- Search Bar -->
+<div class="search-container">
+  <i class="bi bi-search search-icon"></i>
+  <input type="text" id="search-obras-input" class="form-control form-control-lg" placeholder="Buscar obras...">
+  <div id="search-results" class="search-results d-none"></div>
+</div>
+
+<!-- Obras Favoritas Section -->
+{% if obras_favoritas %}
+<div class="mb-5">
+  <h4 class="mb-3"><i class="bi bi-star-fill me-2" style="color: #ffd700;"></i>Obras Favoritas</h4>
+  <div class="row g-3 mb-4">
+    {% for obra in obras_favoritas %}
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100" style="position: relative;">
+          <!-- Botão de Favorito -->
+          <button class="btn-toggle-favorito active" data-obra-id="{{ obra.pk }}" title="Remover dos favoritos">
+            <i class="bi bi-star-fill"></i>
+          </button>
+
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex gap-3 mb-3">
+              {% if obra.capa %}
+                <img src="{{ obra.capa.url }}" alt="{{ obra.titulo }}" style="width:70px;height:105px;object-fit:cover;border-radius:6px;flex-shrink:0;">
+              {% elif obra.capa_url %}
+                <img src="{{ obra.capa_url }}" alt="{{ obra.titulo }}" style="width:70px;height:105px;object-fit:cover;border-radius:6px;flex-shrink:0;">
+              {% else %}
+                <div style="width:70px;height:105px;background:#12122a;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#555;font-size:1.8rem;flex-shrink:0;">
+                  <i class="bi bi-book"></i>
+                </div>
+              {% endif %}
+              <div>
+                <h6 class="mb-1">
+                  <a href="{% url 'obra_detalhe' obra.pk %}" class="text-decoration-none text-white">{{ obra.titulo }}</a>
+                </h6>
+                <div class="d-flex gap-1 flex-wrap mb-1">
+                  <span class="badge badge-tipo">{{ obra.get_tipo_display }}</span>
+                  {% if obra.progresso %}
+                    <span class="badge badge-status {{ obra.progresso.status_leitura }}">{{ obra.progresso.get_status_leitura_display }}</span>
+                  {% endif %}
+                </div>
+                {% if obra.autor %}<p class="text-muted small mb-0">{{ obra.autor }}</p>{% endif %}
+              </div>
+            </div>
+
+            <div class="mt-auto">
+              {% if obra.progresso %}
+                <div class="d-flex justify-content-between text-muted small mb-1">
+                  <span><i class="bi bi-bookmark me-1"></i>Cap. {{ obra.progresso.capitulo_atual }}</span>
+                  {% if obra.total_capitulos %}
+                    <span>{{ obra.total_capitulos }} caps</span>
+                  {% endif %}
+                </div>
+                {% if obra.total_capitulos %}
+                  <div class="progress mb-2" style="height:4px;">
+                    <div class="progress-bar" style="width:{% widthratio obra.progresso.capitulo_atual obra.total_capitulos 100 %}%"></div>
+                  </div>
+                {% endif %}
+              {% endif %}
+              <a href="{% url 'obra_detalhe' obra.pk %}" class="btn btn-sm btn-outline-primary w-100">
+                <i class="bi bi-eye me-1"></i>Ver detalhes
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Links Externos (Favoritos) -->
+{% if favoritos %}
+<div class="mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-link-45deg me-2"></i>Links Externos</h4>
+    <div class="d-flex gap-2">
+      <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addFavoritoModal">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+      <a href="{% url 'favorito_lista' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-gear"></i> Gerenciar
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    {% for favorito in favoritos %}
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100">
+          <div class="card-body">
+            <a href="{{ favorito.url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+              <div class="text-center mb-2">
+                <i class="{{ favorito.icone }}" style="font-size: 2.5rem; color: var(--purple);"></i>
+              </div>
+              <h6 class="text-center mb-1">{{ favorito.titulo }}</h6>
+              {% if favorito.descricao %}
+                <p class="text-muted text-center small mb-0">{{ favorito.descricao|truncatewords:10 }}</p>
+              {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Modal: Quick Add Link Externo -->
+<div class="modal fade" id="addFavoritoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background: var(--surface); border: 1px solid var(--border);">
+      <div class="modal-header" style="border-bottom: 1px solid var(--border);">
+        <h5 class="modal-title">Adicionar Link Externo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="favorito-modal-form" action="{% url 'favorito_criar' %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="id_titulo" class="form-label">Título</label>
+            <input type="text" name="titulo" id="id_titulo" class="form-control" placeholder="Ex: MangaDex" required>
+          </div>
+          <div class="mb-3">
+            <label for="id_url" class="form-label">URL</label>
+            <input type="url" name="url" id="id_url" class="form-control" placeholder="https://..." required>
+          </div>
+          <div class="mb-3">
+            <label for="id_descricao" class="form-label">Descrição</label>
+            <textarea name="descricao" id="id_descricao" class="form-control" rows="2" placeholder="Descrição breve (opcional)"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="id_icone" class="form-label">Ícone</label>
+            <input type="text" name="icone" id="id_icone" class="form-control" placeholder="Ex: bi-book, bi-github" value="bi-link-45deg">
+            <small class="form-text">Veja ícones em <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a></small>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">Adicionar</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lendo agora -->
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h2 class="mb-0"><i class="bi bi-bookmark-heart me-2 text-purple"></i>Lendo agora</h2>
   <a href="{% url 'obra_criar' %}" class="btn btn-primary">
@@ -14,7 +162,12 @@
   <div class="row g-3 mb-5">
     {% for obra in obras_lendo %}
       <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100">
+        <div class="card h-100" style="position: relative;">
+          <!-- Botão de Favorito -->
+          <button class="btn-toggle-favorito {% if obra.favorito %}active{% endif %}" data-obra-id="{{ obra.pk }}" title="{% if obra.favorito %}Remover dos{% else %}Adicionar aos{% endif %} favoritos">
+            <i class="bi bi-star{% if obra.favorito %}-fill{% endif %}"></i>
+          </button>
+
           <div class="card-body d-flex flex-column">
             <div class="d-flex gap-3 mb-3">
               {% if obra.capa %}
@@ -80,12 +233,18 @@
   </div>
 {% endif %}
 
+<!-- Pausadas -->
 {% if obras_pausadas %}
   <h4 class="mb-3 text-muted"><i class="bi bi-pause-circle me-2"></i>Pausadas</h4>
   <div class="row g-3">
     {% for obra in obras_pausadas %}
       <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100" style="opacity:0.75;">
+        <div class="card h-100" style="opacity:0.75; position: relative;">
+          <!-- Botão de Favorito -->
+          <button class="btn-toggle-favorito {% if obra.favorito %}active{% endif %}" data-obra-id="{{ obra.pk }}" title="{% if obra.favorito %}Remover dos{% else %}Adicionar aos{% endif %} favoritos">
+            <i class="bi bi-star{% if obra.favorito %}-fill{% endif %}"></i>
+          </button>
+
           <div class="card-body d-flex flex-column">
             <div class="d-flex gap-3 mb-3">
               {% if obra.capa %}
@@ -119,4 +278,5 @@
     {% endfor %}
   </div>
 {% endif %}
+
 {% endblock %}

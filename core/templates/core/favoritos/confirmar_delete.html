@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Confirmar Exclusão — Histórias Guardadas{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Início</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'favorito_lista' %}">Favoritos</a></li>
+    <li class="breadcrumb-item active">Confirmar Exclusão</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card border-danger">
+      <div class="card-header bg-danger text-white">
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão</h5>
+      </div>
+      <div class="card-body">
+        <p class="mb-4">
+          Tem certeza que deseja remover <strong>{{ favorito.titulo }}</strong> dos seus favoritos?
+        </p>
+
+        <div class="card mb-4" style="background: var(--surface2);">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <i class="{{ favorito.icone }}" style="font-size: 2rem; color: var(--purple);"></i>
+              <div>
+                <strong>{{ favorito.titulo }}</strong>
+                <div class="text-muted small">{{ favorito.url }}</div>
+                {% if favorito.descricao %}
+                  <div class="text-muted small mt-1">{{ favorito.descricao }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-trash me-1"></i>Sim, remover
+            </button>
+            <a href="{% url 'favorito_lista' %}" class="btn btn-outline-secondary">
+              <i class="bi bi-x-lg me-1"></i>Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

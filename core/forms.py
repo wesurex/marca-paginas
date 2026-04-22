@@ -1,5 +1,5 @@
 from django import forms
-from .models import Obra, ProgressoLeitura, Genero
+from .models import Obra, ProgressoLeitura, Genero, Favorito
 
 
 class ObraForm(forms.ModelForm):
@@ -30,4 +30,16 @@ class ProgressoForm(forms.ModelForm):
             'url_atual': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://...'}),
             'status_leitura': forms.Select(attrs={'class': 'form-select'}),
             'notas': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Anotações sobre onde parou, próximo arco, etc.'}),
+        }
+
+
+class FavoritoForm(forms.ModelForm):
+    class Meta:
+        model = Favorito
+        fields = ['titulo', 'url', 'descricao', 'icone']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: MangaDex'}),
+            'url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://...'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Descrição breve (opcional)'}),
+            'icone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: bi-book, bi-github'}),
         }

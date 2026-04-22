@@ -1,0 +1,77 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ titulo_pagina }} — Histórias Guardadas{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Início</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'favorito_lista' %}">Favoritos</a></li>
+    <li class="breadcrumb-item active">{{ titulo_pagina }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-8 col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">{{ titulo_pagina }}</h5>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="{{ form.titulo.id_for_label }}" class="form-label">Título</label>
+            {{ form.titulo }}
+            {% if form.titulo.errors %}
+              <div class="text-danger small mt-1">{{ form.titulo.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.url.id_for_label }}" class="form-label">URL</label>
+            {{ form.url }}
+            {% if form.url.errors %}
+              <div class="text-danger small mt-1">{{ form.url.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.descricao.id_for_label }}" class="form-label">Descrição</label>
+            {{ form.descricao }}
+            {% if form.descricao.errors %}
+              <div class="text-danger small mt-1">{{ form.descricao.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label for="{{ form.icone.id_for_label }}" class="form-label">Ícone</label>
+            {{ form.icone }}
+            <small class="form-text d-block mt-1">
+              Classe do Bootstrap Icons. Veja opções em
+              <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">
+                Bootstrap Icons <i class="bi bi-box-arrow-up-right"></i>
+              </a>
+            </small>
+            {% if form.icone.errors %}
+              <div class="text-danger small mt-1">{{ form.icone.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg me-1"></i>Salvar
+            </button>
+            <a href="{% url 'favorito_lista' %}" class="btn btn-outline-secondary">
+              <i class="bi bi-x-lg me-1"></i>Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

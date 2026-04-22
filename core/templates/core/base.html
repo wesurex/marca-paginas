@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
@@ -123,6 +124,171 @@
     .table-hover tbody tr:hover { background: var(--surface2); color: var(--text); }
     .alert-success { background: #0e2018; border-color: #1a4028; color: #a0dbb0; }
     .alert-danger  { background: #1e0e0e; border-color: #3a1818; color: #dba0a0; }
+    .alert-info { background: #0e1820; border-color: #1a3040; color: #a0c8db; }
+
+    /* Breadcrumb */
+    .breadcrumb { background: transparent; padding: 0; margin: 0; }
+    .breadcrumb-item a { color: var(--purple); }
+    .breadcrumb-item.active { color: var(--muted); }
+    .breadcrumb-item + .breadcrumb-item::before { color: var(--muted); }
+
+    /* Search Container */
+    .search-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .search-container input {
+      padding-left: 40px;
+    }
+    .search-container .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+    .search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .search-result-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: var(--surface2); }
+    .search-result-capa {
+      width: 50px;
+      height: 75px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .search-result-capa-placeholder {
+      width: 50px;
+      height: 75px;
+      background: var(--surface2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--muted);
+    }
+    .search-result-info {
+      flex: 1;
+    }
+    .search-result-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .search-result-meta {
+      font-size: 0.85rem;
+    }
+    .search-no-results {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .search-no-results i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* Favoritos */
+    .favorito-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .favorito-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.15s;
+      padding: 8px 12px;
+      border-radius: 6px;
+      flex: 1;
+    }
+    .favorito-link:hover {
+      background: var(--surface2);
+      color: var(--purple);
+    }
+    .favorito-link i {
+      font-size: 1.5rem;
+    }
+    .drag-handle {
+      cursor: grab;
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+    .drag-handle:hover {
+      color: var(--text);
+    }
+    .sortable-ghost {
+      opacity: 0.4;
+      background: var(--purple);
+    }
+
+    /* Botão Toggle Favorito */
+    .btn-toggle-favorito {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .btn-toggle-favorito i {
+      color: #999;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .btn-toggle-favorito:hover {
+      background: rgba(0, 0, 0, 0.8);
+      transform: scale(1.1);
+    }
+    .btn-toggle-favorito:hover i,
+    .btn-toggle-favorito.active i {
+      color: #ffd700;
+    }
+    .btn-toggle-favorito.active {
+      background: rgba(139, 111, 212, 0.3);
+    }
+
+    {% block extra_css %}{% endblock %}
   </style>
 </head>
 <body>
@@ -186,5 +352,10 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js_libraries %}{% endblock %}
+<script src="{% static 'core/js/search.js' %}"></script>
+<script src="{% static 'core/js/favoritos.js' %}"></script>
+<script src="{% static 'core/js/obras.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

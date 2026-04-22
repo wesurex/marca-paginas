@@ -40,6 +40,7 @@ class Obra(models.Model):
     classificacao = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Classificação',
         choices=[(i, f'{i}/10') for i in range(1, 11)])
     generos = models.ManyToManyField(Genero, blank=True, verbose_name='Gêneros')
+    favorito = models.BooleanField(default=False, verbose_name='Favorito')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -90,3 +91,21 @@ class HistoricoLeitura(models.Model):
         verbose_name = 'Histórico de Leitura'
         verbose_name_plural = 'Histórico de Leituras'
         ordering = ['-lido_em']
+
+
+class Favorito(models.Model):
+    titulo = models.CharField(max_length=255, verbose_name='Título')
+    url = models.URLField(verbose_name='URL')
+    descricao = models.TextField(blank=True, verbose_name='Descrição')
+    icone = models.CharField(max_length=50, default='bi-link-45deg', verbose_name='Ícone (Bootstrap Icons)',
+        help_text='Classe do Bootstrap Icons (ex: bi-book, bi-github)')
+    ordem = models.PositiveIntegerField(default=0, verbose_name='Ordem')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titulo
+
+    class Meta:
+        verbose_name = 'Favorito'
+        verbose_name_plural = 'Favoritos'
+        ordering = ['ordem', 'titulo']

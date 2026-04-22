@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Gerenciar Favoritos — Histórias Guardadas{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Início</a></li>
+    <li class="breadcrumb-item active">Favoritos</li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0"><i class="bi bi-star me-2"></i>Gerenciar Favoritos</h2>
+  <a href="{% url 'favorito_criar' %}" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-1"></i>Adicionar Favorito
+  </a>
+</div>
+
+{% if favoritos %}
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-2"></i>
+    Arraste os itens para reordenar. A ordem será salva automaticamente.
+  </div>
+
+  <div id="favoritos-sortable">
+    {% for favorito in favoritos %}
+      <div class="favorito-item" data-favorito-id="{{ favorito.pk }}">
+        <span class="drag-handle">
+          <i class="bi bi-grip-vertical"></i>
+        </span>
+        <a href="{{ favorito.url }}" target="_blank" rel="noopener noreferrer" class="favorito-link">
+          <i class="{{ favorito.icone }}"></i>
+          <div>
+            <strong>{{ favorito.titulo }}</strong>
+            {% if favorito.descricao %}
+              <div class="text-muted small">{{ favorito.descricao|truncatewords:15 }}</div>
+            {% endif %}
+          </div>
+        </a>
+        <div class="ms-auto d-flex gap-2">
+          <a href="{% url 'favorito_editar' favorito.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="{% url 'favorito_deletar' favorito.pk %}" class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash"></i>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card">
+    <div class="card-body text-center py-5">
+      <i class="bi bi-star text-muted" style="font-size:3rem;"></i>
+      <p class="text-muted mt-3 mb-0">Nenhum favorito adicionado ainda.</p>
+      <a href="{% url 'favorito_criar' %}" class="btn btn-primary mt-3">Adicionar primeiro favorito</a>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js_libraries %}
+<!-- SortableJS for drag & drop -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+{% endblock %}

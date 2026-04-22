@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Genero, Obra, ProgressoLeitura, HistoricoLeitura
+from .models import Genero, Obra, ProgressoLeitura, HistoricoLeitura, Favorito
 
 
 @admin.register(Genero)
@@ -32,3 +32,10 @@ class ProgressoLeituraAdmin(admin.ModelAdmin):
 class HistoricoLeituraAdmin(admin.ModelAdmin):
     list_display = ['obra', 'capitulo', 'pagina', 'lido_em']
     list_filter = ['obra']
+
+
+@admin.register(Favorito)
+class FavoritoAdmin(admin.ModelAdmin):
+    list_display = ['titulo', 'url', 'icone', 'ordem']
+    list_editable = ['ordem']
+    search_fields = ['titulo', 'url']
